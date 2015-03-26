@@ -5,12 +5,13 @@ package
 	
 	public class GameState extends Sprite
 	{
-		private var _startScene:StartScene
-		
+		private var _startScene:StartScene;
+		private var _instructionsScene:InstructionsScene;
 		
 		public function GameState()
 		{
 			startScene();
+			
 		}
 	
 		private function startScene():void
@@ -18,6 +19,26 @@ package
 			_startScene = new StartScene(this);
 			addChild(_startScene);
 		}
+		
+		public function instructionsScene():void
+		{
+			if (_startScene)
+			{
+				removeChild(_startScene);
+				_startScene =null
+			}
+			
+			
+			_instructionsScene = new InstructionsScene(this);
+			addChild(_instructionsScene);
+			
+		}
+		
+		public function endGame():void
+		{
+			fscommand("quit");
+		}
+	
 	}
 	
 }
