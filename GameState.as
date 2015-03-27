@@ -25,7 +25,7 @@ package
 			if (_startScene)
 			{
 				removeChild(_startScene);
-				_startScene =null
+				_startScene =null;
 			}
 			
 			
@@ -39,6 +39,22 @@ package
 			fscommand("quit");
 		}
 	
+		public function quitInstructions():void
+		{
+			if (_instructionsScene)
+			{
+				removeChild(_instructionsScene);
+				_instructionsScene =null;
+				
+			}
+		
+			_startScene = new StartScene(this);
+			addChild(_startScene);
+			
+			
+		}
+		
+		
 	}
 	
 }
