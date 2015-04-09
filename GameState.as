@@ -14,7 +14,7 @@ package
 			
 		}
 	
-		private function startScene():void
+		public function startScene():void
 		{
 			_startScene = new StartScene(this);
 			addChild(_startScene);

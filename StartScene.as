@@ -10,12 +10,20 @@ package
 		private var _startButton:StartButton = new StartButton;
 		private var _endButton:EndButton = new EndButton;
 		private var _instructionsButton:InstructionsButton = new InstructionsButton;
+		private var _mainMenuImage:MainMenuImage = new MainMenuImage;
 		
 		
 		public function StartScene(passedClass:GameState)
 		{
 			_gameState = passedClass;
 			trace("In StartScene");
+			
+			_mainMenuImage.x = 1;
+			_mainMenuImage.y = 1;
+			addChild(_mainMenuImage);
+			
+			
+			
 			_startButton.x = 400;
 			_startButton.y = 300;
 			addChild(_startButton);
@@ -27,6 +35,8 @@ package
 			_endButton.x = 400;
 			_endButton.y = 500;
 			addChild(_endButton);
+			
+			
 			
 			_instructionsButton.addEventListener(MouseEvent.CLICK, startInstructions)
 			_endButton.addEventListener(MouseEvent.CLICK, endGame)

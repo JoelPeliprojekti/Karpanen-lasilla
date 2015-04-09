@@ -12,17 +12,18 @@ package
 		private var _gameState:GameState;
 		private var _instructionsArea:TextField = new TextField;
 		private var _okButton:OkButton = new OkButton;
+	
 		
 		
 		
 		public function InstructionsScene(passedClass:GameState)
 		{
-			_gameState:passedClass
+			_gameState = passedClass;
 			trace("In InstructionsScene")
 			
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = 24;
-			myFormat.font = "Trajan Pro";
+			myFormat.font = "uni 05_53";
 			_instructionsArea.defaultTextFormat = myFormat;
 			_instructionsArea.x = 340;
 			_instructionsArea.y = 130;
@@ -39,7 +40,7 @@ package
 			_okButton.y = 50;
 			addChild(_okButton);
 			
-			_okButton.addEventListener(MouseEvent.CLICK, quitInstructions)
+			_okButton.addEventListener(MouseEvent.CLICK, quitInstructions);
 				
 			
 			
@@ -48,7 +49,9 @@ package
 		
 		private function quitInstructions(event:MouseEvent)
 		{
+			
 			_gameState.quitInstructions();
+			
 			
 		}
 	
