@@ -2,6 +2,7 @@ package
 {
 	import flash.display.Sprite;
 	import flash.system.*;
+	import flash.system.fscommand;
 	
 	public class GameState extends Sprite
 	{

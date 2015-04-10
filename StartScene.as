@@ -2,6 +2,8 @@ package
 {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import flash.ui.Mouse;
 	
 	public class StartScene extends Sprite
@@ -11,6 +13,7 @@ package
 		private var _endButton:EndButton = new EndButton;
 		private var _instructionsButton:InstructionsButton = new InstructionsButton;
 		private var _mainMenuImage:MainMenuImage = new MainMenuImage;
+		private var _gameName:TextField = new TextField;
 		
 		
 		public function StartScene(passedClass:GameState)
@@ -18,21 +21,37 @@ package
 			_gameState = passedClass;
 			trace("In StartScene");
 			
+			// taustakuva
 			_mainMenuImage.x = 1;
 			_mainMenuImage.y = 1;
 			addChild(_mainMenuImage);
 			
+			// pelin nimi
+			var myFormat:TextFormat = new TextFormat();
+			myFormat.size = 96;
+			myFormat.font = "uni 05_53";
+			_gameName.width = 1000;
+			_gameName.height = 500;
+			_gameName.defaultTextFormat = myFormat;
+			_gameName.x = 150;
+			_gameName.y = 10;
+			_gameName.textColor = 000000;
+			_gameName.text = "Kärpänen lasilla"
+			addChild(_gameName)
 			
 			
-			_startButton.x = 400;
+			
+			
+			// painikkeet
+			_startButton.x = 350;
 			_startButton.y = 300;
 			addChild(_startButton);
 			
-			_instructionsButton.x = 400;
+			_instructionsButton.x = 350;
 			_instructionsButton.y = 400;
 			addChild(_instructionsButton);
 				
-			_endButton.x = 400;
+			_endButton.x = 350;
 			_endButton.y = 500;
 			addChild(_endButton);
 			
