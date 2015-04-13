@@ -20,7 +20,7 @@ package
 		public function InstructionsScene(passedClass:GameState)
 		{
 			_gameState = passedClass;
-			trace("In InstructionsScene")
+			trace("In InstructionsScene");
 			
 			_mainMenuImage.x = 1;
 			_mainMenuImage.y = 1;

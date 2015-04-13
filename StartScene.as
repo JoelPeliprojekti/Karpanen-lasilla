@@ -6,6 +6,7 @@ package
 	import flash.text.TextFormat;
 	import flash.ui.Mouse;
 	
+	
 	public class StartScene extends Sprite
 	{
 		private var _gameState:GameState;
@@ -59,6 +60,7 @@ package
 			
 			_instructionsButton.addEventListener(MouseEvent.CLICK, startInstructions)
 			_endButton.addEventListener(MouseEvent.CLICK, endGame)
+			_startButton.addEventListener(MouseEvent.CLICK, startGame)
 			
 				
 		}
@@ -73,6 +75,15 @@ package
 		{
 			_gameState.endGame();
 		}
+		
+		private function startGame(event:MouseEvent)
+		{
+			_gameState.gameScene();
+			
+		}
+	
+	
 	}
+	
 	
 }

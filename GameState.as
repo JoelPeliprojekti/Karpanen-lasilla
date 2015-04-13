@@ -8,6 +8,8 @@ package
 	{
 		private var _startScene:StartScene;
 		private var _instructionsScene:InstructionsScene;
+		private var _gameScene:GameScene;
+		private var _pauseScene:PauseScene;
 		
 		public function GameState()
 		{
@@ -20,6 +22,35 @@ package
 			_startScene = new StartScene(this);
 			addChild(_startScene);
 		}
+		
+		public function gameScene():void
+		{
+			if (_startScene)
+			{
+				removeChild(_startScene);
+				_startScene =null;
+			}
+			
+			
+			_gameScene = new GameScene(this);
+			addChild(_gameScene);
+			
+		}
+		
+		public function pauseScene():void
+		{
+			_pauseScene = new PauseScene(this);
+			_pauseScene.x = 350
+			_pauseScene.y = 180
+			
+			
+			addChildAt(_pauseScene,0);
+			
+			
+		}
+		
+		
+		
 		
 		public function instructionsScene():void
 		{
