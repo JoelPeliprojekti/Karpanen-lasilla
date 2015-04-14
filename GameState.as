@@ -19,6 +19,15 @@ package
 	
 		public function startScene():void
 		{
+			if (_gameScene || _pauseScene)
+			{
+				removeChild(_pauseScene);
+				removeChild(_gameScene);
+				_pauseScene =null;
+				_gameScene =null;
+			}
+			
+			
 			_startScene = new StartScene(this);
 			addChild(_startScene);
 		}
@@ -29,6 +38,12 @@ package
 			{
 				removeChild(_startScene);
 				_startScene =null;
+				
+			} else if (_pauseScene) {
+				
+				removeChild(_pauseScene)
+				_pauseScene =null;
+				
 			}
 			
 			
@@ -58,6 +73,16 @@ package
 			{
 				removeChild(_startScene);
 				_startScene =null;
+			
+			} else if (_pauseScene) {
+				removeChild(_pauseScene)
+				_pauseScene =null;
+				
+			
+			} else if (_gameScene) {
+				removeChild(_gameScene)
+				_gameScene =null;
+				
 			}
 			
 			
@@ -71,6 +96,7 @@ package
 			fscommand("quit");
 		}
 	
+		// ohjeet-ikkunan ok-painike toteuttaa tämän
 		public function quitInstructions():void
 		{
 			if (_instructionsScene)
@@ -86,7 +112,27 @@ package
 			
 		}
 		
+		public function clickOkFromPauseScene():void
+		{
+			removeChild(_pauseScene);
+			_pauseScene =null;
+			trace("game continues")
+			
+		}
+		public function goToInstructionsSceneFromPauseScene():void
+		{
+			
+			removeChild(_gameScene);
+			removeChild(_pauseScene);
+			_pauseScene =null;
+			_gameScene =null;
+			
+			_instructionsScene = new InstructionsScene(this);
+			addChild(_instructionsScene);
+			trace("tulit tänne pausesta")
 		
+		}
+	
 	}
 	
 }
