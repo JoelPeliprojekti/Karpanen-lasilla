@@ -13,8 +13,6 @@ package
 		public function PauseScene(passedClass:GameState)
 		{
 			_gameState = passedClass;
-			trace("In PauseScene");
-			
 			
 			
 			

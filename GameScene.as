@@ -1,5 +1,6 @@
 package
 {
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -15,8 +16,17 @@ package
 		private var _instructionsButton:InstructionsButton = new InstructionsButton;
 		private var _endButton:EndButton = new EndButton;
 		private var _fly:Fly = new Fly;
-		
-		
+		public var _powerSpeed:Number = 10;
+		public var container:MovieClip = new MovieClip;
+		public var vy:Number = 0;
+		public var vx:Number = 0;
+		public var friction:Number = 0.93;
+		public var maxSpeed:Number = 100;
+		public var maxRotation:Number = 20;
+		public var isD:Boolean = false;
+		public var isS:Boolean = false;
+		public var isA:Boolean = false;
+		public var isW:Boolean = false;
 		
 		public function GameScene(passedClass:GameState)
 		{
@@ -28,30 +38,89 @@ package
 			
 			// spawnaa kärpäsen
 			addChildAt(_fly,0);
-			_fly.dead();
-			_fly.x = 480
-			_fly.y = 340
+			_fly.move1();
+			_fly.x = 1024 / 2
+			_fly.y = 768 / 2
 			
+			
+				
+			
+			}
+		
+		
+		private function init(event:Event)
+		{
+			stage.stageFocusRect = false;
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, pauseMenu);
+			stage.focus = _fly
+			stage.addEventListener(Event.ENTER_FRAME, loop)
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, downkey)
 			
 		}
 		
-		private function init(event:Event):void
+		private function downkey(event:KeyboardEvent):void
 		{
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyPressedDown);
+			if (event.keyCode == 68) {
+				isD = true;
+			}
+			
+			if (event.keyCode == 83) {
+				isS = true;
+			}
+			
+			if (event.keyCode == 65) {
+				isA = true;
+			}
+			if (event.keyCode == 87) {
+				isW = true;
+			}
+		}
+		
+		
+		
+		// d on 68, w on 87, a on 65, s on 83, esc on 27
+		private function loop(event:Event):void
+		{
+			if (isD == true && _powerSpeed < maxSpeed)
+			{
+				_fly.rotation += _powerSpeed;
+			}
+			
+			if (isS == true && _powerSpeed < maxSpeed)
+			{
+				
+				_fly.y += 10;
+			}	
+			
+			if (isA == true && _powerSpeed < maxSpeed)	
+			{	
+				_fly.rotation -= _powerSpeed;
+				
+			}	
+			
+			if (isW == true && _powerSpeed < maxSpeed)
+			{
+				
+				var Angle:Number = (2 * Math.PI * (_fly.rotation/360));
+				var dx:Number = _powerSpeed * Math.cos(Angle);
+				var dy:Number = _powerSpeed * Math.sin(Angle);
+				_fly.x += dx;  
+				_fly.y += dy;  
+				
+				
+			
+			} 
 			
 			
-			
-			
+		
 		}
 			
 		
 		// pause-tila
-		private function keyPressedDown(event:KeyboardEvent)
+		private function pauseMenu(event:KeyboardEvent)
 		{
-			
-			
+		
 			var key:uint = event.keyCode;
-			var escPressedOnce:Boolean = false;
 			if (key == 27 )
 			{
 					
@@ -69,7 +138,7 @@ package
 				_endButton.y = 450;
 				addChildAt(_endButton,1);
 				
-				escPressedOnce = true
+				
 					
 				
 				
@@ -78,9 +147,9 @@ package
 				
 			}
 			stage.removeEventListener(KeyboardEvent.KEY_DOWN, arguments.callee);
-			_instructionsButton.addEventListener(MouseEvent.CLICK, startInstructions)
-			_endButton.addEventListener(MouseEvent.CLICK, backToStartScene)
-			_okButton.addEventListener(MouseEvent.CLICK, continueGame)
+			_instructionsButton.addEventListener(MouseEvent.CLICK, startInstructions);
+			_endButton.addEventListener(MouseEvent.CLICK, backToStartScene);
+			_okButton.addEventListener(MouseEvent.CLICK, continueGame);
 		
 		
 		
@@ -111,7 +180,8 @@ package
 		// kun klikkaat Ok
 		private function continueGame(event:MouseEvent)
 		{
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyPressedDown);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, pauseMenu);
+			stage.focus = _fly
 			removeChild(_okButton);
 			removeChild(_instructionsButton);
 			removeChild(_endButton);
