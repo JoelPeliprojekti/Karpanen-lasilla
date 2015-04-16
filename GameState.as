@@ -1,8 +1,11 @@
 package
 {
+	import flash.display.Stage;
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.system.*;
 	import flash.system.fscommand;
+	import flash.events.Event;
 	
 	public class GameState extends Sprite
 	{
@@ -10,9 +13,12 @@ package
 		private var _instructionsScene:InstructionsScene;
 		private var _gameScene:GameScene;
 		private var _pauseScene:PauseScene;
+		private var _fly:Fly;
 		
-		public function GameState()
+		
+		public function GameState():void
 		{
+			
 			startScene();
 			
 		}

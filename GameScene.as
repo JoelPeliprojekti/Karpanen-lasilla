@@ -6,6 +6,8 @@ package
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
 	import flash.ui.Mouse;
 	
@@ -16,10 +18,10 @@ package
 		private var _instructionsButton:InstructionsButton = new InstructionsButton;
 		private var _endButton:EndButton = new EndButton;
 		private var _fly:Fly = new Fly;
-		public var _powerSpeed:Number = 10;
-		public var container:MovieClip = new MovieClip;
+		public var _powerSpeed:Number = 6;
 		public var vy:Number = 0;
 		public var vx:Number = 0;
+		public var rotateSpeed:Number = 6;
 		public var friction:Number = 0.93;
 		public var maxSpeed:Number = 100;
 		public var maxRotation:Number = 20;
@@ -27,6 +29,9 @@ package
 		public var isS:Boolean = false;
 		public var isA:Boolean = false;
 		public var isW:Boolean = false;
+		public var isEsc = false
+		public var flyLives:int = 3
+		public var _lifeBoard:TextField = new TextField;
 		
 		public function GameScene(passedClass:GameState)
 		{
@@ -38,14 +43,24 @@ package
 			
 			// spawnaa kärpäsen
 			addChildAt(_fly,0);
-			_fly.move1();
+			_fly.gotoAndStop("static")
 			_fly.x = 1024 / 2
 			_fly.y = 768 / 2
 			
+			var myFormat:TextFormat = new TextFormat();
+			myFormat.size = 40;
+			myFormat.font = "uni 05_53";
+			_lifeBoard.width = 200;
+			_lifeBoard.height = 200;
+			_lifeBoard.defaultTextFormat = myFormat;
+			_lifeBoard.x = 860;
+			_lifeBoard.y = 40;
+			_lifeBoard.textColor = 000000;
+			_lifeBoard.text = "Lives: " + flyLives
+			addChild(_lifeBoard)
+		
 			
-				
-			
-			}
+		}
 		
 		
 		private function init(event:Event)
@@ -55,66 +70,124 @@ package
 			stage.focus = _fly
 			stage.addEventListener(Event.ENTER_FRAME, loop)
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, downkey)
+			stage.addEventListener(KeyboardEvent.KEY_UP, upkey)
 			
+	
 		}
 		
 		private function downkey(event:KeyboardEvent):void
 		{
 			if (event.keyCode == 68) {
 				isD = true;
+				
 			}
 			
-			if (event.keyCode == 83) {
+			 if (event.keyCode == 83) {
 				isS = true;
+				
 			}
 			
-			if (event.keyCode == 65) {
+			 if (event.keyCode == 65) {
 				isA = true;
+				
 			}
-			if (event.keyCode == 87) {
+			 if (event.keyCode == 87) {
 				isW = true;
+				
+			}
+			
+			 if (event.keyCode == 27) {
+				isEsc = true;
+				
 			}
 		}
 		
+		private function upkey(event:KeyboardEvent)
+		{
+			if (event.keyCode == 68) {
+				isD = false;
+				
+			}
+			
+			else if (event.keyCode == 83) {
+				isS = false;
+				
+			}
+			
+			else if (event.keyCode == 65) {
+				isA = false;
+				
+			}
+			else if (event.keyCode == 87) {
+				isW = false;
+				
+			}
+			
+			if (event.keyCode == 27) {
+				isEsc = false;
+			
+			}
 		
+		}
 		
 		// d on 68, w on 87, a on 65, s on 83, esc on 27
 		private function loop(event:Event):void
 		{
-			if (isD == true && _powerSpeed < maxSpeed)
+			if (isD == true)
 			{
-				_fly.rotation += _powerSpeed;
+				
+				
+				_fly.rotation += rotateSpeed;
+				_fly.gotoAndPlay("flyMoves")
+			
+			}	else if (isA == true)	{	
+				
+				
+				_fly.rotation -= rotateSpeed;
+				_fly.gotoAndPlay("flyMoves")
+					
 			}
 			
-			if (isS == true && _powerSpeed < maxSpeed)
+			if (isS == true)
 			{
 				
-				_fly.y += 10;
-			}	
-			
-			if (isA == true && _powerSpeed < maxSpeed)	
-			{	
-				_fly.rotation -= _powerSpeed;
-				
-			}	
-			
-			if (isW == true && _powerSpeed < maxSpeed)
-			{
 				
 				var Angle:Number = (2 * Math.PI * (_fly.rotation/360));
 				var dx:Number = _powerSpeed * Math.cos(Angle);
 				var dy:Number = _powerSpeed * Math.sin(Angle);
-				_fly.x += dx;  
-				_fly.y += dy;  
-				
-				
+				_fly.x -= dx;  
+				_fly.y -= dy;
+				_fly.gotoAndPlay("flyMoves")
+			}	
 			
-			} 
+			
+			if (isW == true)
+			{
+				
+				
+				var Angle2:Number = (2 * Math.PI * (_fly.rotation/360));
+				var d2x:Number = _powerSpeed * Math.cos(Angle2);
+				var d2y:Number = _powerSpeed * Math.sin(Angle2);
+				_fly.x += d2x;  
+				_fly.y += d2y;
+				_fly.gotoAndPlay("flyMoves")
+				
+			}	
+			if (isW == false && isD == false && isA == false && isS == false)	
+			{
+				_fly.gotoAndStop("static")
+				
+			}
 			
 			
 		
 		}
-			
+		
+		public function degreesToRadians(degrees:Number)
+		{
+			return degrees * Math.PI / 180;
+		}
+
 		
 		// pause-tila
 		private function pauseMenu(event:KeyboardEvent)
