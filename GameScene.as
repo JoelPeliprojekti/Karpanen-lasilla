@@ -18,6 +18,9 @@ package
 		private var _instructionsButton:InstructionsButton = new InstructionsButton;
 		private var _endButton:EndButton = new EndButton;
 		private var _fly:Fly = new Fly;
+		private var _alarm:Alarm = new Alarm;
+		private var _window:Window = new Window;
+		private var _windowContainer = new MovieClip
 		public var _powerSpeed:Number = 6;
 		public var vy:Number = 0;
 		public var vx:Number = 0;
@@ -46,6 +49,7 @@ package
 			_fly.gotoAndStop("static")
 			_fly.x = 1024 / 2
 			_fly.y = 768 / 2
+				
 			
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = 40;
@@ -56,10 +60,14 @@ package
 			_lifeBoard.x = 860;
 			_lifeBoard.y = 40;
 			_lifeBoard.textColor = 000000;
-			_lifeBoard.text = "Lives: " + flyLives
+			_lifeBoard.text = "Lives: " + flyLives;
 			addChild(_lifeBoard)
-		
 			
+			_windowContainer = new MovieClip();
+			_windowContainer.addChild(_window)
+			_windowContainer.x = 1024 / 2;
+			_windowContainer.y = 768 / 2;
+			addChild(_windowContainer)
 		}
 		
 		
@@ -79,26 +87,28 @@ package
 		{
 			if (event.keyCode == 68) {
 				isD = true;
-				
+				_fly.gotoAndPlay("flyMoves")
 			}
 			
-			 if (event.keyCode == 83) {
+			if (event.keyCode == 83) {
 				isS = true;
-				
+				_fly.gotoAndPlay("flyMoves")
 			}
 			
-			 if (event.keyCode == 65) {
+			if (event.keyCode == 65) {
 				isA = true;
-				
+				_fly.gotoAndPlay("flyMoves")
 			}
-			 if (event.keyCode == 87) {
+			if (event.keyCode == 87) {
 				isW = true;
-				
+				_fly.gotoAndPlay("flyMoves")
 			}
 			
-			 if (event.keyCode == 27) {
+			if (event.keyCode == 27) {
 				isEsc = true;
-				
+				pauseMenu(event)
+				stage.focus =null;
+				stage.removeEventListener(KeyboardEvent.KEY_DOWN, downkey)
 			}
 		}
 		
@@ -133,18 +143,20 @@ package
 		// d on 68, w on 87, a on 65, s on 83, esc on 27
 		private function loop(event:Event):void
 		{
+				
+				
 			if (isD == true)
 			{
 				
 				
 				_fly.rotation += rotateSpeed;
-				_fly.gotoAndPlay("flyMoves")
+				
 			
 			}	else if (isA == true)	{	
 				
 				
 				_fly.rotation -= rotateSpeed;
-				_fly.gotoAndPlay("flyMoves")
+				
 					
 			}
 			
@@ -155,9 +167,12 @@ package
 				var Angle:Number = (2 * Math.PI * (_fly.rotation/360));
 				var dx:Number = _powerSpeed * Math.cos(Angle);
 				var dy:Number = _powerSpeed * Math.sin(Angle);
-				_fly.x -= dx;  
-				_fly.y -= dy;
-				_fly.gotoAndPlay("flyMoves")
+				_fly.x -= dx / 10;  
+				_fly.y -= dy / 10;
+				
+				// ikkunan parallax scrollaus
+				_windowContainer.x += dx;
+				_windowContainer.y += dy;
 			}	
 			
 			
@@ -168,9 +183,12 @@ package
 				var Angle2:Number = (2 * Math.PI * (_fly.rotation/360));
 				var d2x:Number = _powerSpeed * Math.cos(Angle2);
 				var d2y:Number = _powerSpeed * Math.sin(Angle2);
-				_fly.x += d2x;  
-				_fly.y += d2y;
-				_fly.gotoAndPlay("flyMoves")
+				_fly.x += d2x / 10;  
+				_fly.y += d2y/ 10;
+				
+				// ikkunan parallax scrollaus
+				_windowContainer.x -= d2x;
+				_windowContainer.y -= d2y;
 				
 			}	
 			if (isW == false && isD == false && isA == false && isS == false)	
@@ -254,6 +272,7 @@ package
 		private function continueGame(event:MouseEvent)
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, pauseMenu);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, downkey);
 			stage.focus = _fly
 			removeChild(_okButton);
 			removeChild(_instructionsButton);

@@ -13,7 +13,7 @@ package
 		private var _instructionsScene:InstructionsScene;
 		private var _gameScene:GameScene;
 		private var _pauseScene:PauseScene;
-		private var _fly:Fly;
+	
 		
 		
 		public function GameState():void
