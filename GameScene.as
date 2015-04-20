@@ -13,6 +13,7 @@ package
 	
 	public class GameScene extends Sprite
 	{
+		private var _spider1:Spider1;
 		private var _gameState:GameState;
 		private var _okButton:OkButton = new OkButton;
 		private var _instructionsButton:InstructionsButton = new InstructionsButton;
@@ -20,8 +21,9 @@ package
 		private var _fly:Fly = new Fly;
 		private var _alarm:Alarm = new Alarm;
 		private var _window:Window = new Window;
-		private var _windowContainer = new MovieClip
-		public var _powerSpeed:Number = 6;
+		private var _windowContainer = new MovieClip;
+		private var _enemyList:Array = new Array();
+		public var _powerSpeed:Number = 10;
 		public var vy:Number = 0;
 		public var vx:Number = 0;
 		public var rotateSpeed:Number = 6;
@@ -32,8 +34,8 @@ package
 		public var isS:Boolean = false;
 		public var isA:Boolean = false;
 		public var isW:Boolean = false;
-		public var isEsc = false
-		public var flyLives:int = 3
+		public var isEsc = false;
+		public var flyLives:int = 3;
 		public var _lifeBoard:TextField = new TextField;
 		
 		public function GameScene(passedClass:GameState)
@@ -74,7 +76,6 @@ package
 		private function init(event:Event)
 		{
 			stage.stageFocusRect = false;
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, pauseMenu);
 			stage.focus = _fly
 			stage.addEventListener(Event.ENTER_FRAME, loop)
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, downkey)
@@ -106,9 +107,7 @@ package
 			
 			if (event.keyCode == 27) {
 				isEsc = true;
-				pauseMenu(event)
-				stage.focus =null;
-				stage.removeEventListener(KeyboardEvent.KEY_DOWN, downkey)
+				pauseMenu()
 			}
 		}
 		
@@ -143,8 +142,18 @@ package
 		// d on 68, w on 87, a on 65, s on 83, esc on 27
 		private function loop(event:Event):void
 		{
+			
+			
+			if(Math.floor(Math.random() * 90) == 5)	
+			{
+				var enemy:Spider1 = new Spider1(stage, _fly);
 				
+				_enemyList.push(enemy);	
+				_windowContainer.addChild(enemy);
 				
+			}
+			
+			
 			if (isD == true)
 			{
 				
@@ -167,8 +176,8 @@ package
 				var Angle:Number = (2 * Math.PI * (_fly.rotation/360));
 				var dx:Number = _powerSpeed * Math.cos(Angle);
 				var dy:Number = _powerSpeed * Math.sin(Angle);
-				_fly.x -= dx / 10;  
-				_fly.y -= dy / 10;
+				_fly.x -= dx / 25;  
+				_fly.y -= dy / 25;
 				
 				// ikkunan parallax scrollaus
 				_windowContainer.x += dx;
@@ -183,8 +192,8 @@ package
 				var Angle2:Number = (2 * Math.PI * (_fly.rotation/360));
 				var d2x:Number = _powerSpeed * Math.cos(Angle2);
 				var d2y:Number = _powerSpeed * Math.sin(Angle2);
-				_fly.x += d2x / 10;  
-				_fly.y += d2y/ 10;
+				_fly.x += d2x / 25;  
+				_fly.y += d2y/ 25;
 				
 				// ikkunan parallax scrollaus
 				_windowContainer.x -= d2x;
@@ -201,33 +210,30 @@ package
 		
 		}
 		
-		public function degreesToRadians(degrees:Number)
-		{
-			return degrees * Math.PI / 180;
-		}
-
 		
 		// pause-tila
-		private function pauseMenu(event:KeyboardEvent)
+		private function pauseMenu()
 		{
-		
-			var key:uint = event.keyCode;
-			if (key == 27 )
-			{
-					
+			trace("in pausemenu")
+			
+			stage.focus = this;
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, downkey)
+			_instructionsButton.addEventListener(MouseEvent.CLICK, startInstructions);
+			_endButton.addEventListener(MouseEvent.CLICK, backToStartScene);
+			_okButton.addEventListener(MouseEvent.CLICK, continueGame);		
 				
 				
 				_okButton.x = 380;
 				_okButton.y = 350;
-				addChildAt(_okButton,1);
+				addChild(_okButton);
 				
 				_instructionsButton.x = 380;
 				_instructionsButton.y = 250;
-				addChildAt(_instructionsButton,1);
+				addChild(_instructionsButton);
 				
 				_endButton.x = 380;
 				_endButton.y = 450;
-				addChildAt(_endButton,1);
+				addChild(_endButton);
 				
 				
 					
@@ -235,18 +241,10 @@ package
 				
 				_gameState.pauseScene();
 				
-				
-			}
-			stage.removeEventListener(KeyboardEvent.KEY_DOWN, arguments.callee);
-			_instructionsButton.addEventListener(MouseEvent.CLICK, startInstructions);
-			_endButton.addEventListener(MouseEvent.CLICK, backToStartScene);
-			_okButton.addEventListener(MouseEvent.CLICK, continueGame);
-		
-		
-		
 		}
 	
 		// kun klikkaat Ohjeet
+		
 		private function startInstructions(event:MouseEvent)
 		{
 			
@@ -273,7 +271,7 @@ package
 		{
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, pauseMenu);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, downkey);
-			stage.focus = _fly
+			stage.focus = _fly;
 			removeChild(_okButton);
 			removeChild(_instructionsButton);
 			removeChild(_endButton);
@@ -283,7 +281,23 @@ package
 			
 		}
 		
+		private function exitPause(event:KeyboardEvent)
+		{
+			if (isEsc == true) {
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, pauseMenu);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, downkey);
+			removeChild(_okButton);
+			removeChild(_instructionsButton);
+			removeChild(_endButton);
+			stage.focus = _fly;
+			
+			}
+			
+			
+		}
 	
-	
+		
+		
+		
 	}
 }
