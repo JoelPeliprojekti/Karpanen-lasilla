@@ -3,19 +3,22 @@ package
 	import flash.display.MovieClip;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.geom.Rectangle;
 	
 	public class Spider1 extends MovieClip
 	{
 		
 		private var stageRef:Stage;
 		private var target:Fly;
-		private var _powerSpeed:Number = 3;
+		private var _powerSpeed:Number = 2;
+		public var _screenRect:Rectangle = new Rectangle(0, 0, 1024, 768);
+		public var _spawnRect:Rectangle = new Rectangle();
 		private var dx:Number = 0;
 		private var dy:Number = 0;
 		private var vy:Number = 3;
 		private var vx:Number = 3;
 		private var distanceTotal:Number;
-		private var agroRange:int = 2000;
+		private var agroRange:int = 200;
 		private var rotateSpeed:Number = 6;
 		private var friction:Number = 0.93;
 		private var maxSpeed:Number = 100;
@@ -27,17 +30,72 @@ package
 			this.stageRef = stageRef;
 			this.target = target;
 		
-			x = Math.random() * stageRef.stageWidth;
-			y = Math.random() * stageRef.stageHeight;
+			var spawnX:Number;
+			var spawnY:Number;
 			
-			addEventListener(Event.ENTER_FRAME, loop)
+			// We set the spawn rectangle to the size of the screen but
+			// expand it out by the size of the object being spawned.
+			// This will allow enemies of any size to always be moved off screen.
+			var padX:Number = this.width;
+			var padY:Number = this.height;
+			
+			_spawnRect.x = _screenRect.x - padX;
+			_spawnRect.width = _screenRect.width + padX;
+			_spawnRect.y = _screenRect.y - padY;
+			_spawnRect.height = _screenRect.height + padY;
+			
+			// Pick randomly between X and Y, and move the spawn position to the full extent on
+			// that axis. Then randomise the other axis.
+			if (Math.random() > 0.5)
+			{
+				// We are setting the X to its full distance on the left or right, randomly pick which
+				if (Math.random() > 0.5)
+				{
+					// left
+					spawnX = _spawnRect.x;
+				}
+				else
+				{
+					// right
+					spawnX = _spawnRect.width;
+				}
+				// Randomise the other axis.
+				spawnY = randomWithinRange(_spawnRect.y, _spawnRect.height);
+			}
+			else
+			{
+				// We are setting the Y to its full distance up or down, randomly pick which
+				if (Math.random() > 0.5)
+				{
+					// Up
+					spawnY = _spawnRect.y;
+				}
+				else
+				{
+					// down
+					spawnY = _spawnRect.height;
+				}
+				// Randomise the other axis.
+				spawnX = randomWithinRange(_spawnRect.x, _spawnRect.width);
+			}
+			
+			// Move the enemy to the new position
+			this.x = spawnX;
+			this.y = spawnY;
+			
+			addEventListener(Event.ENTER_FRAME, loop, false, 0, true)
 		}
-	
+		
+		private function randomWithinRange(min:Number, max:Number):Number
+		{
+			return Math.random() * (max - min) + min;
+			
+		}
 
 		
 		private function loop(event:Event):void
 		
-		{
+		{	
 			var distanceX:Number = target.x - this.x; 
 			var distanceY:Number = target.y- this.y; 
 			
@@ -45,7 +103,8 @@ package
 			distanceTotal = Math.sqrt(distanceX*distanceX+distanceY*distanceY); 
 			
 			//check if target is within agro range 
-			if (distanceTotal <= agroRange){ 
+			if (distanceTotal <= agroRange)
+			{ 
 				//calculate how much to move 
 				var moveDistanceX:Number = rotateSpeed*distanceX/distanceTotal; 
 				var moveDistanceY:Number = rotateSpeed*distanceY/distanceTotal; 
@@ -67,7 +126,7 @@ package
 				
 				//rotate follower toward target 
 				this.rotation = 180*Math.atan2(dy, dx)/Math.PI; 
-				}
+			}
 		
 		
 		}

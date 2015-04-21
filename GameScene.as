@@ -6,6 +6,7 @@ package
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.ui.Keyboard;
@@ -20,10 +21,16 @@ package
 		private var _endButton:EndButton = new EndButton;
 		private var _fly:Fly = new Fly;
 		private var _alarm:Alarm = new Alarm;
+		private var _scoreBoard:TextField = new TextField;
+		private var _score:int = 0;
+		private var hitSpider:HitBox = new HitBox;
+		private var hitBounds:HitBounds = new HitBounds;
 		private var _window:Window = new Window;
 		private var _windowContainer = new MovieClip;
 		private var _enemyList:Array = new Array();
 		public var _powerSpeed:Number = 10;
+		public var _screenRect:Rectangle = new Rectangle(0, 0, 1024, 768);
+		public var _spawnRect:Rectangle = new Rectangle();
 		public var vy:Number = 0;
 		public var vx:Number = 0;
 		public var rotateSpeed:Number = 6;
@@ -52,7 +59,7 @@ package
 			_fly.x = 1024 / 2
 			_fly.y = 768 / 2
 				
-			
+			// kärpäsen elämät textfieldiin
 			var myFormat:TextFormat = new TextFormat();
 			myFormat.size = 40;
 			myFormat.font = "uni 05_53";
@@ -63,7 +70,21 @@ package
 			_lifeBoard.y = 40;
 			_lifeBoard.textColor = 000000;
 			_lifeBoard.text = "Lives: " + flyLives;
-			addChild(_lifeBoard)
+			addChild(_lifeBoard);
+			
+			
+			// pisteet textfieldiin
+			var myFormat2:TextFormat = new TextFormat();
+			myFormat2.size = 40;
+			myFormat2.font = "uni 05_53";
+			_scoreBoard.width = 200;
+			_scoreBoard.height = 200;
+			_scoreBoard.defaultTextFormat = myFormat;
+			_scoreBoard.x = 965;
+			_scoreBoard.y = 110;
+			_scoreBoard.textColor = 000000;
+			_scoreBoard.text = String(_score);
+			addChild(_scoreBoard);
 			
 			_windowContainer = new MovieClip();
 			_windowContainer.addChild(_window)
@@ -73,15 +94,16 @@ package
 		}
 		
 		
+		
 		private function init(event:Event)
 		{
 			stage.stageFocusRect = false;
-			stage.focus = _fly
-			stage.addEventListener(Event.ENTER_FRAME, loop)
-			stage.addEventListener(KeyboardEvent.KEY_DOWN, downkey)
-			stage.addEventListener(KeyboardEvent.KEY_UP, upkey)
-			
-	
+			stage.focus = _fly;
+			stage.addEventListener(Event.ENTER_FRAME, loop);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, downkey);
+			stage.addEventListener(KeyboardEvent.KEY_UP, upkey);
+			stage.addEventListener(Event.ENTER_FRAME, spawningEnemies);
+			stage.addEventListener(Event.ENTER_FRAME, hitDetection);
 		}
 		
 		private function downkey(event:KeyboardEvent):void
@@ -138,20 +160,48 @@ package
 			}
 		
 		}
+		private function hitDetection(event:Event):void
+		{
+			if (_fly.hitTestObject(hitSpider))
+			{
+				trace("hit enemy")
+				
+			}
+			
+			
+			
+		}
+		
+		
+		
+		
+		private function spawningEnemies(event:Event):void
+		{
+			if(Math.floor(Math.random() * 90) == 5)	
+			{
+				var enemy:Spider1 = new Spider1(stage, _fly);
+				_enemyList.push(enemy);	
+				_window.addChild(enemy);
+				trace(_enemyList.length);
+				
+			}
+			if (_enemyList.length >= 4)
+			{
+				stage.removeEventListener(Event.ENTER_FRAME, spawningEnemies)
+				
+				
+			}
+			
+			
+			
+			
+		}
+		
 		
 		// d on 68, w on 87, a on 65, s on 83, esc on 27
 		private function loop(event:Event):void
 		{
 			
-			
-			if(Math.floor(Math.random() * 90) == 5)	
-			{
-				var enemy:Spider1 = new Spider1(stage, _fly);
-				
-				_enemyList.push(enemy);	
-				_windowContainer.addChild(enemy);
-				
-			}
 			
 			
 			if (isD == true)
