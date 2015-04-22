@@ -4,6 +4,8 @@ package
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import GameScene;
+	import Fly;
 	
 	public class Spider1 extends MovieClip
 	{
@@ -23,7 +25,7 @@ package
 		private var friction:Number = 0.93;
 		private var maxSpeed:Number = 100;
 		private var maxRotation:Number = 20;
-		public var _fly:Fly = new Fly;
+		
 		
 		public function Spider1(stageRef:Stage, target:Fly):void
 		{
@@ -91,11 +93,26 @@ package
 			return Math.random() * (max - min) + min;
 			
 		}
-
+		
 		
 		private function loop(event:Event):void
 		
 		{	
+			
+			
+			if (this.hitTestObject(GameScene._fly.hitfly))
+			{
+				trace("hit enemy")
+				trace(this.x);
+				trace(GameScene._fly.x);
+				GameScene._fly.gotoAndStop("dead")
+			}
+			
+			
+			
+			
+			
+			
 			var distanceX:Number = target.x - this.x; 
 			var distanceY:Number = target.y- this.y; 
 			

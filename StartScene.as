@@ -5,7 +5,7 @@ package
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.ui.Mouse;
-	
+	import flash.display.Stage;
 	
 	public class StartScene extends Sprite
 	{
@@ -15,10 +15,12 @@ package
 		private var _instructionsButton:InstructionsButton = new InstructionsButton;
 		private var _mainMenuImage:MainMenuImage = new MainMenuImage;
 		private var _gameName:TextField = new TextField;
+		private var stageRef:Stage;
 		
-		
-		public function StartScene(passedClass:GameState)
+		public function StartScene(passedClass:GameState, stageRef:Stage)
 		{
+			
+			this.stageRef=stageRef;
 			_gameState = passedClass;
 			trace("In StartScene");
 			

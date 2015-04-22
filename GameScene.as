@@ -14,16 +14,19 @@ package
 	
 	public class GameScene extends Sprite
 	{
-		private var _spider1:Spider1;
+		public static var _spider1:Spider1;
 		private var _gameState:GameState;
 		private var _okButton:OkButton = new OkButton;
 		private var _instructionsButton:InstructionsButton = new InstructionsButton;
 		private var _endButton:EndButton = new EndButton;
-		private var _fly:Fly = new Fly;
+		public static var _fly:Fly;
+		public var windowFrameBelow:WindowFrameBelow;
+		public var windowFrameAbove:WindowFrameAbove;
+		public var windowFrameRight:WindowFrameRight;
+		public var windowFrameLeft:WindowFrameLeft;
 		private var _alarm:Alarm = new Alarm;
 		private var _scoreBoard:TextField = new TextField;
 		private var _score:int = 0;
-		private var hitSpider:HitBox = new HitBox;
 		private var hitBounds:HitBounds = new HitBounds;
 		private var _window:Window = new Window;
 		private var _windowContainer = new MovieClip;
@@ -44,9 +47,11 @@ package
 		public var isEsc = false;
 		public var flyLives:int = 3;
 		public var _lifeBoard:TextField = new TextField;
+		private var stageRef:Stage;
 		
-		public function GameScene(passedClass:GameState)
+		public function GameScene(passedClass:GameState, stageRef:Stage)
 		{
+			this.stageRef=stageRef;
 			_gameState = passedClass;
 			trace("In GameScene");
 			
@@ -54,6 +59,7 @@ package
 			
 			
 			// spawnaa kärpäsen
+			_fly = new Fly(stageRef, _spider1);
 			addChildAt(_fly,0);
 			_fly.gotoAndStop("static")
 			_fly.x = 1024 / 2
@@ -97,13 +103,14 @@ package
 		
 		private function init(event:Event)
 		{
+			
 			stage.stageFocusRect = false;
 			stage.focus = _fly;
 			stage.addEventListener(Event.ENTER_FRAME, loop);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, downkey);
 			stage.addEventListener(KeyboardEvent.KEY_UP, upkey);
 			stage.addEventListener(Event.ENTER_FRAME, spawningEnemies);
-			stage.addEventListener(Event.ENTER_FRAME, hitDetection);
+			
 		}
 		
 		private function downkey(event:KeyboardEvent):void
@@ -160,17 +167,6 @@ package
 			}
 		
 		}
-		private function hitDetection(event:Event):void
-		{
-			if (_fly.hitTestObject(hitSpider))
-			{
-				trace("hit enemy")
-				
-			}
-			
-			
-			
-		}
 		
 		
 		
@@ -179,7 +175,7 @@ package
 		{
 			if(Math.floor(Math.random() * 90) == 5)	
 			{
-				var enemy:Spider1 = new Spider1(stage, _fly);
+				var enemy:Spider1 = new Spider1(stageRef, _fly);
 				_enemyList.push(enemy);	
 				_window.addChild(enemy);
 				trace(_enemyList.length);
@@ -194,11 +190,9 @@ package
 			
 			
 			
-			
 		}
 		
 		
-		// d on 68, w on 87, a on 65, s on 83, esc on 27
 		private function loop(event:Event):void
 		{
 			
@@ -226,8 +220,8 @@ package
 				var Angle:Number = (2 * Math.PI * (_fly.rotation/360));
 				var dx:Number = _powerSpeed * Math.cos(Angle);
 				var dy:Number = _powerSpeed * Math.sin(Angle);
-				_fly.x -= dx / 25;  
-				_fly.y -= dy / 25;
+				_fly.x -= dx / 200;  
+				_fly.y -= dy / 200;
 				
 				// ikkunan parallax scrollaus
 				_windowContainer.x += dx;
@@ -235,15 +229,18 @@ package
 			}	
 			
 			
-			if (isW == true)
+			if (isW == true && windowFrameRight.hitRightFrame == false && windowFrameLeft.hitLeftFrame == false)
 			{
 				
-				
+				trace("x"+_windowContainer.x);
+				trace("y"+_windowContainer.y);
+				trace(_windowContainer.height);
+				trace(_windowContainer.width);
 				var Angle2:Number = (2 * Math.PI * (_fly.rotation/360));
 				var d2x:Number = _powerSpeed * Math.cos(Angle2);
 				var d2y:Number = _powerSpeed * Math.sin(Angle2);
-				_fly.x += d2x / 25;  
-				_fly.y += d2y/ 25;
+				_fly.x += d2x / 200;  
+				_fly.y += d2y / 200;
 				
 				// ikkunan parallax scrollaus
 				_windowContainer.x -= d2x;

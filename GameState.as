@@ -1,11 +1,11 @@
 package
 {
-	import flash.display.Stage;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.Event;
 	import flash.system.*;
 	import flash.system.fscommand;
-	import flash.events.Event;
 	
 	public class GameState extends Sprite
 	{
@@ -13,12 +13,12 @@ package
 		private var _instructionsScene:InstructionsScene;
 		private var _gameScene:GameScene;
 		private var _pauseScene:PauseScene;
-	
+		private var stageRef:Stage;
 		
 		
 		public function GameState():void
 		{
-			
+			this.stageRef=stage;
 			startScene();
 			
 		}
@@ -34,7 +34,7 @@ package
 			}
 			
 			
-			_startScene = new StartScene(this);
+			_startScene = new StartScene(this, stageRef);
 			addChild(_startScene);
 		}
 		
@@ -53,7 +53,7 @@ package
 			}
 			
 			
-			_gameScene = new GameScene(this);
+			_gameScene = new GameScene(this, stageRef);
 			addChild(_gameScene);
 			
 		}
@@ -112,7 +112,7 @@ package
 				
 			}
 		
-			_startScene = new StartScene(this);
+			_startScene = new StartScene(this, stageRef);
 			addChild(_startScene);
 			
 			
