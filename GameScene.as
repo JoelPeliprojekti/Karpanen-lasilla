@@ -1,5 +1,7 @@
 package
 {
+	import Spider1;
+	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.Stage;
@@ -20,10 +22,10 @@ package
 		private var _instructionsButton:InstructionsButton = new InstructionsButton;
 		private var _endButton:EndButton = new EndButton;
 		public static var _fly:Fly;
-		public var windowFrameBelow:WindowFrameBelow;
-		public var windowFrameAbove:WindowFrameAbove;
-		public var windowFrameRight:WindowFrameRight;
-		public var windowFrameLeft:WindowFrameLeft;
+		public var windowFrameBelow:WindowFrameBelow = new WindowFrameBelow;
+		public var windowFrameAbove:WindowFrameAbove = new WindowFrameAbove;
+		public var windowFrameRight:WindowFrameRight = new WindowFrameRight;
+		public var windowFrameLeft:WindowFrameLeft = new WindowFrameLeft;
 		private var _alarm:Alarm = new Alarm;
 		private var _scoreBoard:TextField = new TextField;
 		private var _score:int = 0;
@@ -46,7 +48,7 @@ package
 		public var isW:Boolean = false;
 		public var isEsc = false;
 		public var flyLives:int = 3;
-		public var _lifeBoard:TextField = new TextField;
+		public static var _lifeBoard:TextField = new TextField;
 		private var stageRef:Stage;
 		
 		public function GameScene(passedClass:GameState, stageRef:Stage)
@@ -110,10 +112,9 @@ package
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, downkey);
 			stage.addEventListener(KeyboardEvent.KEY_UP, upkey);
 			stage.addEventListener(Event.ENTER_FRAME, spawningEnemies);
-			
 		}
 		
-		private function downkey(event:KeyboardEvent):void
+		public function downkey(event:KeyboardEvent):void
 		{
 			if (event.keyCode == 68) {
 				isD = true;
@@ -140,7 +141,7 @@ package
 			}
 		}
 		
-		private function upkey(event:KeyboardEvent)
+		public function upkey(event:KeyboardEvent)
 		{
 			if (event.keyCode == 68) {
 				isD = false;
@@ -171,7 +172,7 @@ package
 		
 		
 		
-		private function spawningEnemies(event:Event):void
+		public function spawningEnemies(event:Event):void
 		{
 			if(Math.floor(Math.random() * 90) == 5)	
 			{
@@ -193,7 +194,7 @@ package
 		}
 		
 		
-		private function loop(event:Event):void
+		public function loop(event:Event):void
 		{
 			
 			
@@ -229,13 +230,11 @@ package
 			}	
 			
 			
-			if (isW == true && windowFrameRight.hitRightFrame == false && windowFrameLeft.hitLeftFrame == false)
+			if (isW == true && windowFrameRight.hitRightFrame == false && windowFrameLeft.hitLeftFrame == false && windowFrameAbove.hitFrameAbove == false && windowFrameBelow.hitFrameBelow == false)
 			{
 				
 				trace("x"+_windowContainer.x);
 				trace("y"+_windowContainer.y);
-				trace(_windowContainer.height);
-				trace(_windowContainer.width);
 				var Angle2:Number = (2 * Math.PI * (_fly.rotation/360));
 				var d2x:Number = _powerSpeed * Math.cos(Angle2);
 				var d2y:Number = _powerSpeed * Math.sin(Angle2);
@@ -254,8 +253,24 @@ package
 			}
 			
 			
+				
 		
 		}
+		
+		
+		public static function hitDetection():void
+		{
+		 var flyLives:int = 3;
+		
+		 if (flyLives > 0)
+		 {
+			 flyLives = flyLives - 1
+		 }
+			
+		
+		GameScene._lifeBoard.text = "Lives: " + flyLives;
+		
+		}	
 		
 		
 		// pause-tila

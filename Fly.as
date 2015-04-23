@@ -15,6 +15,7 @@ package
 		static public const STATIC:String = "static";
 		static public const FLYMOVES:String = "flyMoves";
 		static public const DEAD:String = "dead";
+		private var _gameScene:GameScene;
 		private var target:Spider1;
 		private var _spider1:Spider1;
 		private var stageRef:Stage;
@@ -26,18 +27,13 @@ package
 			this._window = _window
 			this.stageRef = stageRef;
 			this.target = target;
-			addEventListener(Event.ENTER_FRAME, hitDetection, false, 0, true)
+
 			
 		}
-		private function hitDetection(event:Event):void
+		public function flyIsHit():void
 		{
-			
-			//if (this.hitTestObject(GameScene._window.windowBorders))
-			//{
-				//trace("hit window border")
-				
-				
-			//}
+			trace("tulit tänne spiderista")
+			GameScene.hitDetection();
 			
 			
 		}

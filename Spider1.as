@@ -10,11 +10,13 @@ package
 	public class Spider1 extends MovieClip
 	{
 		
+		
 		private var stageRef:Stage;
 		private var target:Fly;
 		private var _powerSpeed:Number = 2;
 		public var _screenRect:Rectangle = new Rectangle(0, 0, 1024, 768);
 		public var _spawnRect:Rectangle = new Rectangle();
+		private var _gameScene:GameScene;
 		private var dx:Number = 0;
 		private var dy:Number = 0;
 		private var vy:Number = 3;
@@ -31,7 +33,7 @@ package
 		{
 			this.stageRef = stageRef;
 			this.target = target;
-		
+			
 			var spawnX:Number;
 			var spawnY:Number;
 			
@@ -95,7 +97,7 @@ package
 		}
 		
 		
-		private function loop(event:Event):void
+		public function loop(event:Event):void
 		
 		{	
 			
@@ -106,6 +108,8 @@ package
 				trace(this.x);
 				trace(GameScene._fly.x);
 				GameScene._fly.gotoAndStop("dead")
+				GameScene._fly.flyIsHit();				
+				
 			}
 			
 			
