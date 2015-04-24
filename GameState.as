@@ -65,7 +65,7 @@ package
 			_pauseScene.y = 180
 			
 			
-			addChildAt(_pauseScene,0);
+			addChild(_pauseScene);
 			
 			
 		}

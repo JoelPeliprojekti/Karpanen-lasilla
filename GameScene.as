@@ -21,6 +21,7 @@ package
 		private var _okButton:OkButton = new OkButton;
 		private var _instructionsButton:InstructionsButton = new InstructionsButton;
 		private var _endButton:EndButton = new EndButton;
+		private var gameBackground:GameBackground = new GameBackground;
 		public static var _fly:Fly;
 		public var windowFrameBelow:WindowFrameBelow = new WindowFrameBelow;
 		public var windowFrameAbove:WindowFrameAbove = new WindowFrameAbove;
@@ -33,7 +34,7 @@ package
 		private var _window:Window = new Window;
 		private var _windowContainer = new MovieClip;
 		private var _enemyList:Array = new Array();
-		public var _powerSpeed:Number = 10;
+		public var _powerSpeed:Number = 20;
 		public var _screenRect:Rectangle = new Rectangle(0, 0, 1024, 768);
 		public var _spawnRect:Rectangle = new Rectangle();
 		public var vy:Number = 0;
@@ -66,6 +67,11 @@ package
 			_fly.gotoAndStop("static")
 			_fly.x = 1024 / 2
 			_fly.y = 768 / 2
+				
+			addChildAt(gameBackground, 0)
+			gameBackground.x = 1024 / 2;
+			gameBackground.y = 768 / 2;
+				
 				
 			// kärpäsen elämät textfieldiin
 			var myFormat:TextFormat = new TextFormat();
@@ -227,6 +233,10 @@ package
 				// ikkunan parallax scrollaus
 				_windowContainer.x += dx;
 				_windowContainer.y += dy;
+			
+				gameBackground.x += dx / 10;
+				gameBackground.y += dy / 10;
+			
 			}	
 			
 			
@@ -245,6 +255,8 @@ package
 				_windowContainer.x -= d2x;
 				_windowContainer.y -= d2y;
 				
+				gameBackground.x -= d2x / 10;
+				gameBackground.y -= d2y / 10;
 			}	
 			if (isW == false && isD == false && isA == false && isS == false)	
 			{
